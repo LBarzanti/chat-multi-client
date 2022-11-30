@@ -13,7 +13,9 @@ public class App
             for(int i=1; i>1; i++)
             {
                 Socket s = ss.accept();
+                System.out.println("connessione effettuata");
                 login l = new login(s);
+                l.start();
             }
             ss.close();
         } 
