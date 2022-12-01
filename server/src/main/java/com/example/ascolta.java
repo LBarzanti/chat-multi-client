@@ -47,7 +47,7 @@ public class ascolta extends Thread
                     }
                     else if(msg.getTesto_mess().equals("lista"))
                     {
-                        l.printList();
+                        l.printList(c);
                     }
                     else
                     {

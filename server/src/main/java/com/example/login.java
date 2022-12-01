@@ -76,9 +76,10 @@ public class login extends Thread
     {
         try
         {
+            DataOutputStream out2 = new DataOutputStream(this.s.getOutputStream());
             for (int i = 0; i < host.size(); i++) 
             {
-                out.writeBytes(c.encrypt(host.get(i)) + "\n");
+                out2.writeBytes(c.encrypt(host.get(i)) + "\n");
             }
             out.writeBytes(c.encrypt("fine") + "\n");
         }

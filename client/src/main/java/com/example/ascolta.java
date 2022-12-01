@@ -37,10 +37,19 @@ public class ascolta extends Thread
         }
     }
 
-    public Messaggio deserializza(String mess) throws Exception
+    public Messaggio deserializza(String mess)
     {
-        XmlMapper xmlmapper2 = new XmlMapper();
-        Messaggio m2 = xmlmapper2.readValue(mess, Messaggio.class);
-        return m2;
+        try 
+        {
+            XmlMapper xmlmapper2 = new XmlMapper();
+            Messaggio m2 = xmlmapper2.readValue(mess, Messaggio.class);
+            return m2;
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("deserializza: " + e.getLocalizedMessage());
+            return null;
+        }
+        
     }
 }
