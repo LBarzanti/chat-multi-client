@@ -2,6 +2,8 @@ package com.example;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOError;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ public class login extends Thread
         this.s = s;
     }
 
+    public login(){}
+
     public void run()
     {
         try 
@@ -28,12 +32,12 @@ public class login extends Thread
             out = new DataOutputStream(s.getOutputStream());
             crittografia c = new crittografia(s);
             c.init();
-            boolean trovato = false;
+            boolean trovato = true;
             String nome = null;
+            out.writeBytes(c.encrypt("inserire il nome utente") + "\n");
             while (trovato) 
             {
                 trovato = false;
-                out.writeBytes(c.encrypt("inserire il nome utente") + "\n");
                 nome = c.decrypt(in.readLine());
                 for (int i = 0; i < host.size(); i++) 
                 {
@@ -41,24 +45,47 @@ public class login extends Thread
                     {
                         out.writeBytes(c.encrypt("il nome scelto è già in uso") + "\n");
                         trovato=true;
+                        break;
                     }
                 }
             }
             host.add(nome);
             sockets.add(s);
             chiavi.add(c);
-            out.writeBytes("logged\n");
-            for (int i = 0; i < host.size(); i++) 
-            {
-                out.writeBytes(c.encrypt(host.get(i)) + "\n");
-            }
-            out.writeBytes(c.encrypt("fine") + "\n");
+            out.writeBytes(c.encrypt("logged") + "\n");
+            printList(c);
             ascolta a = new ascolta(s, c);
             a.start();
         } 
         catch (Exception e) 
         {
             System.out.println("login: " + e.getLocalizedMessage());
+            
         }
+    }
+
+    public void logout(int x) throws IOException
+    {
+        sockets.get(x).close();
+        sockets.remove(x);
+        chiavi.remove(x);
+        host.remove(x);
+    }
+
+    public void printList(crittografia c)
+    {
+        try
+        {
+            for (int i = 0; i < host.size(); i++) 
+            {
+                out.writeBytes(c.encrypt(host.get(i)) + "\n");
+            }
+            out.writeBytes(c.encrypt("fine") + "\n");
+        }
+        catch(Exception e)
+        {
+            System.out.println("printList(): " + e.getLocalizedMessage());
+        }
+        
     }
 }

@@ -10,7 +10,7 @@ public class App
         try 
         {
             ServerSocket ss = new ServerSocket(25565);
-            for(int i=1; i>1; i++)
+            for(int i=2; i!=1; i++)
             {
                 Socket s = ss.accept();
                 System.out.println("connessione effettuata");
